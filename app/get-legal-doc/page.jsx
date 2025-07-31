@@ -209,6 +209,7 @@ const ChatBot = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log("Questions fetched from backend:", data);
       setQuestions(data.questions || []);
       if (data.questions && data.questions.length > 0) {
         setMessages((prev) => [

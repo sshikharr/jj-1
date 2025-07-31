@@ -104,21 +104,70 @@ export default function Sidebar() {
     }
   }, [showSettings, user]);
 
-  const handleNewsletterSubscribe = () => {
-    toast({
-      title: "Subscribed",
-      description: "You've subscribed to the newsletter!",
-    });
-    setUser({ ...user, newsletterSubscribed: true });
-  };
+  console.log("User", user)
 
-  const handleNewsletterOptOut = () => {
-    toast({
-      title: "Opted Out",
-      description: "You've opted out of the newsletter.",
+// Helper function to update user and localStorage
+const updateUserData = (updatedUser) => {
+  setUser(updatedUser);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  }
+};
+
+// Newsletter Subscribe Function with localStorage update
+const handleNewsletterSubscribe = async () => {
+  try {
+    const response = await axios.put("http://localhost:5000/api/users/subscribe-newsletter", {
+      email: user?.email
     });
-    setUser({ ...user, newsletterSubscribed: false });
-  };
+    
+    if (response.status === 200) {
+      toast({
+        title: "Subscribed",
+        description: "You've subscribed to the newsletter!",
+      });
+      
+      // Update user state and localStorage
+      const updatedUser = { ...user, newsLetterSubscribed: true };
+      updateUserData(updatedUser);
+    }
+  } catch (error) {
+    console.error("Newsletter subscription failed:", error);
+    toast({
+      title: "Error",
+      description: error.response?.data?.error || "Failed to subscribe to newsletter",
+      variant: "destructive",
+    });
+  }
+};
+
+// Newsletter Opt-out Function with localStorage update
+const handleNewsletterOptOut = async () => {
+  try {
+    const response = await axios.put("http://localhost:5000/api/users/subscribe-newsletter", {
+      email: user?.email,
+      unsubscribe: true // Add this flag to handle opt-out
+    });
+    
+    if (response.status === 200) {
+      toast({
+        title: "Opted Out",
+        description: "You've opted out of the newsletter.",
+      });
+      
+      // Update user state and localStorage
+      const updatedUser = { ...user, newsLetterSubscribed: false };
+      updateUserData(updatedUser);
+    }
+  } catch (error) {
+    console.error("Newsletter opt-out failed:", error);
+    toast({
+      title: "Error",
+      description: error.response?.data?.error || "Failed to opt out of newsletter",
+      variant: "destructive",
+    });
+  }
+};
 
   const handleLogout = async () => {
     if (typeof window !== "undefined") {
@@ -316,7 +365,7 @@ export default function Sidebar() {
       onClick: () => router.push("/faq"),
       isActive: pathname === "/faq",
     },
-    ...(!user?.newsletterSubscribed
+    ...(!user?.newsLetterSubscribed
       ? [
           {
             icon: Mail,
@@ -653,7 +702,7 @@ export default function Sidebar() {
       {/* Other Settings */}
       <div className="space-y-3 sm:space-y-4">
     
-              {user?.newsletterSubscribed && (
+              {user?.newsLetterSubscribed && (
                 <Card className="p-4 shadow-sm">
                   <h3 className="text-xl font-semibold mb-2">
                     Newsletter Subscription

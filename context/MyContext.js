@@ -79,6 +79,7 @@ const MyProvider = ({ children }) => {
       }
       const data = await response.json();
       setUser(data);
+      console.log("User data fetched:", data);
       localStorage.setItem("user", JSON.stringify(data));
       fetchChats(data);
       setSelectedCountry(data.country);
