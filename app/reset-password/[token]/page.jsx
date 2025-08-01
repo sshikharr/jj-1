@@ -40,7 +40,7 @@ export default function ResetPasswordPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/auth/resetPassword/${token}`,
+        `https://jj-2.vercel.app/api/auth/resetPassword/${token}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

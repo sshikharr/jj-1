@@ -40,11 +40,11 @@ const ChatList = ({ currentTab }) => {
       console.log("Fetching draft chats from local API:", url);
       return url;
     } else if (currentTab === "analysis") {
-      const url = `http://localhost:5000/api/image-chat/${user._id}`;
+      const url = `https://jj-2.vercel.app/api/image-chat/${user._id}`;
       console.log("Fetching analysis chats from external API:", url);
       return url;
     } else {
-      const url = `http://localhost:5000/api/chat/${user._id}`;
+      const url = `https://jj-2.vercel.app/api/chat/${user._id}`;
       console.log("Fetching chats from external API:", url);
       return url;
     }
@@ -57,11 +57,11 @@ const ChatList = ({ currentTab }) => {
       console.log("Deleting draft chat from local API:", url);
       return url;
     } else if (currentTab === "analysis") {
-      const url = `http://localhost:5000/api/image-chat/${chatId}`;
+      const url = `https://jj-2.vercel.app/api/image-chat/${chatId}`;
       console.log("Deleting analysis chat from external API:", url);
       return url;
     } else {
-      const url = `http://localhost:5000/api/chat/${chatId}`;
+      const url = `https://jj-2.vercel.app/api/chat/${chatId}`;
       console.log("Deleting chat from external API:", url);
       return url;
     }
@@ -107,11 +107,11 @@ const ChatList = ({ currentTab }) => {
       let url = "";
 
       if (currentTab === "drafting") {
-        url = `http://localhost:5000/api/draftchats/chat/${chat.chatId}`;
+        url = `https://jj-2.vercel.app/api/draftchats/chat/${chat.chatId}`;
       } else if (currentTab === "analysis") {
-        url = `http://localhost:5000/api/image-chat/${chat.chatId}`;
+        url = `https://jj-2.vercel.app/api/image-chat/${chat.chatId}`;
       } else {
-        url = `http://localhost:5000/api/chat/${chat.chatId}`;
+        url = `https://jj-2.vercel.app/api/chat/${chat.chatId}`;
       }
 
       const response = await fetch(url);

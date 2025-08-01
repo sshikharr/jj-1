@@ -129,7 +129,7 @@ const ChatBot = () => {
   const updateDraftCountAndNotify = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/users/updated",
+        "https://jj-2.vercel.app/api/users/updated",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -194,7 +194,7 @@ const ChatBot = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:5000/api/legaldocs/questions",
+        "https://jj-2.vercel.app/api/legaldocs/questions",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -327,7 +327,7 @@ const ChatBot = () => {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/legaldocs/generate",
+        "https://jj-2.vercel.app/api/legaldocs/generate",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

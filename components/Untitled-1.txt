@@ -1,1 +1,1 @@
-http://localhost:5000/
+https://jj-2.vercel.app/

@@ -31,7 +31,7 @@ export default function ForgotPassword() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/forgotPassword",
+        "https://jj-2.vercel.app/api/auth/forgotPassword",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

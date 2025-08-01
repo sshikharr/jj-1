@@ -152,9 +152,9 @@ const Navbar = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/update/${user.userId}`,
+        `https://jj-2.vercel.app/api/users/update/${user.userId}`,
         {
-          // const response = await fetch(`http://localhost:5000/api/users/update/${user.userId}`, {
+          // const response = await fetch(`https://jj-2.vercel.app/api/users/update/${user.userId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -180,8 +180,8 @@ const Navbar = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/update/${user.userId}`,
-        // const response = await fetch(`http://localhost:5000/api/users/update/${user.userId}`,
+        `https://jj-2.vercel.app/api/users/update/${user.userId}`,
+        // const response = await fetch(`https://jj-2.vercel.app/api/users/update/${user.userId}`,
         {
           method: "PUT",
           headers: {

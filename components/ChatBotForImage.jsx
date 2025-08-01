@@ -110,7 +110,7 @@ const ChatBoxForDocs = () => {
       setInput("");
 
       const response = await fetch(
-        "http://localhost:5000/api/image-chat/chat",
+        "https://jj-2.vercel.app/api/image-chat/chat",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -162,7 +162,7 @@ const ChatBoxForDocs = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:5000/api/image-chat/process-file",
+        "https://jj-2.vercel.app/api/image-chat/process-file",
         {
           method: "POST",
           body: formData,
