@@ -3,10 +3,12 @@ import connectDB from "../../../../lib/connectDB/db";
 import User from "../../../../lib/db/models/User";
 
 export async function POST(req) {
+    const data = await req.json();
+  console.log("Webhook: Received data", data);
   try {
     console.log("Webhook: Request received");
     await connectDB();
-    const data = await req.json();
+
     console.log("Webhook: Received data", data);
 
     if (data.txStatus === "SUCCESS") {
