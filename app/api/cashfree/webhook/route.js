@@ -11,16 +11,16 @@ export async function POST(req) {
 
     console.log("Webhook: Received data", data);
 
-    if (data.payment.payment_status === "SUCCESS") {
+    if (data.data.payment.payment_status === "SUCCESS") {
       console.log("Webhook: Payment successful");
       const userId = data.customer_details?.customer_id;
       if (userId) {
         const user = await User.findById(userId);
         if (user) {
           // Update user plan based on payment_amount
-          if (data.payment.payment_amount && data.payment.payment_amount == 199) {
+          if (data.data.payment.payment_amount && data.data.payment.payment_amount == 199) {
             user.plan = "super";
-          } else if (data.payment.payment_amount && data.payment.payment_amount == 399) {
+          } else if (data.data.payment.payment_amount && data.data.payment.payment_amount == 399) {
             user.plan = "advance";
           }
           await user.save();
@@ -32,7 +32,7 @@ export async function POST(req) {
         console.log("Webhook: No user id in customer_details");
       }
     } else {
-      console.log("Webhook: Payment not successful, status:", data.payment.payment_status);
+      console.log("Webhook: Payment not successful, status:", data.data.payment.payment_status);
     }
     return NextResponse.json({ success: true });
   } catch (error) {
