@@ -110,7 +110,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        "https://jj-2.vercel.app/api/auth/signup",
+        "http://localhost:5000/api/auth/signup",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

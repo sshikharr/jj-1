@@ -10,8 +10,8 @@ const DocsChatList = () => {
   useEffect(() => {
     const fetchChats = async () => {
       const data = await fetch(
-        `https://jj-2.vercel.app/api/image-chat/${user.userId}`
-        // `https://jj-2.vercel.app/api/image-chat/${user.userId}`
+        `http://localhost:5000/api/image-chat/${user.userId}`
+        // `http://localhost:5000/api/image-chat/${user.userId}`
       ).then((res) => res.json());
       setChats(data.reverse());
     };
@@ -26,9 +26,9 @@ const DocsChatList = () => {
 
     try {
       const response = await fetch(
-        `https://jj-2.vercel.app/api/image-chat/${chatId}`,
+        `http://localhost:5000/api/image-chat/${chatId}`,
         {
-          // const response = await fetch(`https://jj-2.vercel.app/api/image-chat/${chatId}`, {
+          // const response = await fetch(`http://localhost:5000/api/image-chat/${chatId}`, {
           method: "DELETE",
         }
       );
