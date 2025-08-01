@@ -11,7 +11,7 @@ export async function POST(req) {
 
     console.log("Webhook: Received data", data);
 
-    if (data.txStatus === "SUCCESS") {
+    if (data.payment.payment_status === "SUCCESS") {
       console.log("Webhook: Payment successful");
       const userId = data.customer_details?.customer_id;
       if (userId) {
