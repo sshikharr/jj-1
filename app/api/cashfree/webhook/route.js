@@ -13,9 +13,9 @@ export async function POST(req) {
 
     if (data.data.payment.payment_status === "SUCCESS") {
       console.log("Webhook: Payment successful");
-      const userId = data.customer_details?.customer_id;
-      if (userId) {
-        const user = await User.findById(userId);
+      const userEmail = data.data.customer_details?.customer_email;
+      if (userEmail) {
+        const user = await User.findOne({ email: userEmail });
         if (user) {
           // Update user plan based on payment_amount
           if (data.data.payment.payment_amount && data.data.payment.payment_amount == 199) {
