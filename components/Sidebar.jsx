@@ -78,6 +78,7 @@ export default function Sidebar() {
   const [apiKeys, setApiKeys] = useState([]);
   // Track which keys are visible (unmasked)
   const [visibleKeys, setVisibleKeys] = useState({});
+  const [processingPlan, setProcessingPlan] = useState(null);
 
   // Fetch API keys for the current user.
   const fetchApiKeys = async () => {
@@ -180,32 +181,32 @@ const handleNewsletterOptOut = async () => {
     setSelectedChat(null);
   };
 
-  const handleBuyNow = async (plan) => {
-    setIsProcessing(true);
-    setCouponMessage("");
-    try {
-      const response = await axios.post("/api/cashfree/initiate", {
-        plan,
-        coupon,
-        userId: user?._id,
-      });
-      const { payment_link, message } = response.data;
-      if (payment_link) {
-        window.location.href = payment_link;
-      } else {
-        setCouponMessage(
-          message || "Payment processed. Your plan has been updated."
-        );
-      }
-    } catch (error) {
-      console.error("Payment initiation failed", error);
+const handleBuyNow = async (plan) => {
+  setProcessingPlan(plan); // Set which plan is being processed
+  setCouponMessage("");
+  try {
+    const response = await axios.post("/api/cashfree/initiate", {
+      plan,
+      coupon,
+      userId: user?._id,
+    });
+    const { payment_link, message } = response.data;
+    if (payment_link) {
+      window.location.href = payment_link;
+    } else {
       setCouponMessage(
-        error.response?.data?.error ||
-          "Payment initiation failed. Please try again."
+        message || "Payment processed. Your plan has been updated."
       );
     }
-    setIsProcessing(false);
-  };
+  } catch (error) {
+    console.error("Payment initiation failed", error);
+    setCouponMessage(
+      error.response?.data?.error ||
+        "Payment initiation failed. Please try again."
+    );
+  }
+  setProcessingPlan(null); // Reset processing state
+};
 
   // API key management functions with toast notifications.
   const generateApiKey = async () => {
@@ -789,18 +790,27 @@ const handleNewsletterOptOut = async () => {
   const isPremium = plan.name !== "Basic";
   
   // Function to get button text based on plan name
-  const getButtonText = (planName) => {
-    switch(planName.toLowerCase()) {
-      case 'basic':
-        return 'Current Plan';
-      case 'super':
-        return 'Upgrade Plan';
-      case 'advance':
-        return 'Get Upgrade';
-      default:
-        return 'Select Plan';
-    }
-  };
+const getButtonText = (planName, userPlan) => {
+  const currentPlan = userPlan?.toLowerCase();
+  const targetPlan = planName.toLowerCase();
+  
+  if (currentPlan === targetPlan) {
+    return 'Current Plan';
+  }
+  
+  switch(targetPlan) {
+    case 'basic':
+      return currentPlan === 'super' || currentPlan === 'advance' ? 'Downgrade to Basic' : 'Select Basic';
+    case 'super':
+      if (currentPlan === 'basic') return 'Upgrade to Super';
+      if (currentPlan === 'advance') return 'Downgrade to Super';
+      return 'Select Super';
+    case 'advance':
+      return currentPlan === 'basic' || currentPlan === 'super' ? 'Upgrade to Advance' : 'Select Advance';
+    default:
+      return 'Select Plan';
+  }
+};
   
   return (
     <div
@@ -862,39 +872,39 @@ const handleNewsletterOptOut = async () => {
         ))}
       </ul>
 
-      {/* Action Button */}
-      <div className="mt-auto">
-        {isActive ? (
-          <Button 
-            className="w-full h-12 text-base font-semibold bg-gray-100 text-gray-500 cursor-not-allowed" 
-            disabled
-          >
-            Current Plan
-          </Button>
-        ) : (
-          <Button
-            className={`w-full h-12 text-base font-semibold transition-all duration-300 ${
-              isPremium
-                ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
-                : "bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
-            }`}
-            onClick={() => handleBuyNow(plan.name.toLowerCase())}
-            disabled={isProcessing}
-          >
-            {isProcessing ? (
-              <div className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-              </div>
-            ) : (
-              getButtonText(plan.name)
-            )}
-          </Button>
-        )}
-      </div>
+    {/* Action Button */}
+    <div className="mt-auto">
+      {isActive ? (
+        <Button 
+          className="w-full h-12 text-base font-semibold bg-gray-100 text-gray-500 cursor-not-allowed" 
+          disabled
+        >
+          Current Plan
+        </Button>
+      ) : (
+        <Button
+          className={`w-full h-12 text-base font-semibold transition-all duration-300 ${
+            isPremium
+              ? "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl"
+              : "bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+          }`}
+          onClick={() => handleBuyNow(plan.name.toLowerCase())}
+          disabled={processingPlan !== null} // Disable all buttons when any is processing
+        >
+          {processingPlan === plan.name.toLowerCase() ? (
+            <div className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </div>
+          ) : (
+            getButtonText(plan.name, user?.plan)
+          )}
+        </Button>
+      )}
+    </div>
     </div>
   );
 })}
