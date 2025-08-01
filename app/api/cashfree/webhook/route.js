@@ -26,10 +26,10 @@ export async function POST(req) {
           await user.save();
           console.log("Webhook: Updated user plan to", user.plan);
         } else {
-          console.log("Webhook: User not found with id", userId);
+          console.log("Webhook: User not found", userEmail);
         }
       } else {
-        console.log("Webhook: No user id in customer_details");
+        console.log("Webhook: No user email in customer_details");
       }
     } else {
       console.log("Webhook: Payment not successful, status:", data.data.payment.payment_status);
